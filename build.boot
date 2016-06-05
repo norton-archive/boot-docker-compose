@@ -4,6 +4,10 @@
 (set-env! :resource-paths #{"resources" "src"}
           :source-paths   #{"test"}
           :dependencies   '[[org.clojure/clojure "RELEASE"]
+                            [webjure/json-schema "0.7.2"]
+                            [cheshire "5.6.1"]
+                            [org.clojure/test.check "0.9.0" :scope "test"]
+                            [tolitius/boot-check "0.1.2-SNAPSHOT" :scope "test"]
                             [adzerk/boot-test "RELEASE" :scope "test"]])
 
 (task-options!
@@ -12,11 +16,23 @@
       :version     version
       :description "FIXME: write description"
       :url         "http://example/FIXME"
-      :scm         {:url "https://github.com/yourname/boot-docker-compose"}
-      :license     {"Eclipse Public License"
-                    "http://www.eclipse.org/legal/epl-v10.html"}}
+      :scm         {:url "https://github.com/norton/boot-docker-compose"}
+      :license     {"The MIT License (MIT)"
+                    "https//opensource.org/licenses/MIT"}}
  jar {:main        'boot-docker-compose.core
       :file        (str "boot-docker-compose-" version "-standalone.jar")})
+
+(require '[tolitius.boot-check :as check])
+
+(deftask check-sources
+  "Check the project sources."
+  []
+  (set-env! :source-paths #{"src" "test"})
+  (comp
+   (check/with-yagni)
+   (check/with-eastwood)
+   (check/with-kibit)
+   #_(check/with-bikeshed))) ; TODO max-line-length is configurable?
 
 (deftask build
   "Build the project locally as a JAR."
