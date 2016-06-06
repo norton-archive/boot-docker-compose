@@ -4,8 +4,8 @@
 (set-env! :resource-paths #{"resources" "src"}
           :source-paths   #{"test"}
           :dependencies   '[[org.clojure/clojure "RELEASE"]
-                            [webjure/json-schema "0.7.2"]
-                            [cheshire "5.6.1"]
+                            [circleci/clj-yaml "0.5.5"]
+                            [me.raynes/conch "0.8.0"]
                             [org.clojure/test.check "0.9.0" :scope "test"]
                             [tolitius/boot-check "0.1.2-SNAPSHOT" :scope "test"]
                             [adzerk/boot-test "RELEASE" :scope "test"]])

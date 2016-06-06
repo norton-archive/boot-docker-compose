@@ -4,9 +4,7 @@
             [clojure.spec.gen :as gen]
             [clojure.test.check.clojure-test :refer :all]
             [clojure.test.check.properties :as prop]
-            [boot-docker-compose.spec-config-v2-0 :refer :all]
-            [boot-docker-compose.config-json :as config-json]
-            [cheshire.core :as cheshire]))
+            [boot-docker-compose.spec-config-v2-0 :refer :all]))
 
 (defspec boolean-valid? 100
   (prop/for-all [x (s/gen :boot-docker-compose.spec-config-v2-0/boolean)]
@@ -35,9 +33,3 @@
 (defspec spec-config-valid? 10 ; TODO where is the bottleneck?
   (prop/for-all [x (s/gen :boot-docker-compose.spec-config-v2-0/spec-config)]
     (s/valid? :boot-docker-compose.spec-config-v2-0/spec-config x)))
-
-(defspec spec-config-json-valid? 10 ; TODO where is the bottleneck?
-  (prop/for-all [x (s/gen :boot-docker-compose.spec-config-v2-0/spec-config)]
-    (let [y (walk/stringify-keys x)
-          z (cheshire/generate-string y {:pretty true})]
-      (config-json/validate-schema-v2-0 z))))

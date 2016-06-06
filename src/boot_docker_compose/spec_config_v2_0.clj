@@ -182,7 +182,10 @@
 ;;          "additionalProperties": false
 ;;      },
 
-(s/def ::service (s/keys :opt []))
+(s/def ::build string?)
+(s/def ::image string?)
+
+(s/def ::service (s/keys :req [::build ::image]:opt []))
 
 (s/def ::subnet :boot-docker-compose.spec-ip-addr/cidr)
 (s/def ::ip_range :boot-docker-compose.spec-ip-addr/cidr)
@@ -258,7 +261,7 @@
 ;;   }
 ;; }
 
-(s/def ::version string?)
+(s/def ::version (s/with-gen #(= % "2.0") #(gen/return "2.0")))
 
 (def ^:private gen-config-key
   "Generate a config key."
@@ -273,4 +276,4 @@
 (s/def ::networks (s/map-of ::config-key ::network))
 (s/def ::volumes (s/map-of ::config-key ::volume))
 
-(s/def ::spec-config (s/keys :opt [::version ::services ::networks ::volumes]))
+(s/def ::spec-config (s/keys :req [::version] :opt [::services ::networks ::volumes]))
