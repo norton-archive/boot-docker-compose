@@ -4,9 +4,6 @@
             [clojure.spec.gen :as gen]
             [boot-docker-compose.spec-ip-addr]))
 
-(defn- boolean? [x] (instance? Boolean x))
-(s/def ::boolean (s/with-gen boolean? #(gen/boolean)))
-
 
 ;;  "definitions": {
 
@@ -210,7 +207,7 @@
 (s/def ::driver_opts (s/map-of ::driver_opts-key ::driver_opts-val))
 
 (s/def ::name string?)
-(s/def ::external (s/alt :boolean ::boolean :object (s/keys :req [::name])))
+(s/def ::external (s/alt :boolean boolean? :object (s/keys :req [::name])))
 
 (s/def ::network (s/keys :opt [::ipam ::driver ::driver_opts ::external]))
 

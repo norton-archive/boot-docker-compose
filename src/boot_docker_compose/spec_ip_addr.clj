@@ -2,8 +2,7 @@
   (:require [clojure.core :as core]
             [clojure.string :as string]
             [clojure.spec :as s]
-            [clojure.spec.gen :as gen]
-            [clojure.test.check.generators :as tcgen]))
+            [clojure.spec.gen :as gen]))
 
 ;; See
 ;; http://blog.markhatton.co.uk/2011/03/15/regular-expressions-for-ip-addresses-cidr-ranges-and-hostnames
@@ -32,12 +31,12 @@
 (def ^:private gen-ipv4-cidr
   "Generate IPv4 Classless Inter-Domain Routing."
   (gen/fmap #(string/join %)
-            (gen/tuple gen-ipv4-address (gen/return "/") tcgen/nat)))
+            (gen/tuple gen-ipv4-address (gen/return "/") (gen/large-integer* {:min 0}))))
 
 (def ^:private gen-ipv6-cidr
   "Generate IPv6 Classless Inter-Domain Routing."
   (gen/fmap #(string/join %)
-            (gen/tuple gen-ipv6-address (gen/return "/") tcgen/nat)))
+            (gen/tuple gen-ipv6-address (gen/return "/") (gen/large-integer* {:min 0}))))
 
 (def ^:private gen-hostname-part
   "Generate an internet hostname part."

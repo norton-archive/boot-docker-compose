@@ -6,10 +6,6 @@
             [clojure.test.check.properties :as prop]
             [boot-docker-compose.spec-config-v2-0 :refer :all]))
 
-(defspec boolean-valid? 100
-  (prop/for-all [x (s/gen :boot-docker-compose.spec-config-v2-0/boolean)]
-    (s/valid? :boot-docker-compose.spec-config-v2-0/boolean x)))
-
 (defspec service-valid? 100
   (prop/for-all [x (s/gen :boot-docker-compose.spec-config-v2-0/service)]
     (s/valid? :boot-docker-compose.spec-config-v2-0/service x)))
