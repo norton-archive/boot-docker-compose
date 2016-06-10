@@ -16,6 +16,6 @@
         (docker-compose "-f" temp-file "config")
         true)
       (catch clojure.lang.ExceptionInfo e
-        (println "caught" (ex-data e))
+        (println "CAUGHT" (ex-data e) "=>" z)
         false)
       (finally (.delete temp-file)))))

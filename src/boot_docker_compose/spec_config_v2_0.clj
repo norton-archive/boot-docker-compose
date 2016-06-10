@@ -4,6 +4,7 @@
             [clojure.spec.gen :as gen]
             [boot-docker-compose.spec-ip-addr]))
 
+(s/def ::not-empty-string? (s/and string? #(>= 0 (count %))))
 
 ;;  "definitions": {
 
@@ -182,7 +183,7 @@
 (s/def ::build string?)
 (s/def ::image string?)
 
-(s/def ::service (s/keys :req [::build ::image]:opt []))
+(s/def ::service (s/keys :opt [::build ::image]))
 
 (s/def ::subnet :boot-docker-compose.spec-ip-addr/cidr)
 (s/def ::ip_range :boot-docker-compose.spec-ip-addr/cidr)
@@ -197,7 +198,7 @@
 (def ^:private gen-driver_opts-key
   "Generate a config key."
   (gen/fmap keyword
-            (gen/string-ascii)))
+            (gen/not-empty (gen/string-ascii))))
 
 (defn- driver_opts-key? [x] (and (keyword? x) #(re-matches #"^.+$" (name %))))
 (s/def ::driver_opts-key (s/with-gen driver_opts-key? #(gen/such-that driver_opts-key? gen-driver_opts-key)))
@@ -206,7 +207,7 @@
 (s/def ::driver_opts-val (s/alt :string string? :number number?))
 (s/def ::driver_opts (s/map-of ::driver_opts-key ::driver_opts-val))
 
-(s/def ::name string?)
+(s/def ::name ::not-empty-string?)
 (s/def ::external (s/alt :boolean boolean? :object (s/keys :req [::name])))
 
 (s/def ::network (s/keys :opt [::ipam ::driver ::driver_opts ::external]))
@@ -263,10 +264,10 @@
 (def ^:private gen-config-key
   "Generate a config key."
   (gen/fmap #(keyword (string/join %))
-            (gen/vector (gen/one-of [(gen/char-alphanumeric)
-                                     (gen/return \.) (gen/return \_) (gen/return \-)]))))
+            (gen/not-empty (gen/vector (gen/one-of [(gen/char-alphanumeric)
+                                                    (gen/return \.) (gen/return \_) (gen/return \-)])))))
 
-(defn- config-key? [x] (and (keyword? x) #(re-matches #"^[a-zA-Z0-9._-]+$" (name %))))
+(defn- config-key? [x] (and (keyword? x) #(re-matches #"^[a-zA-Z0-9._][a-zA-Z0-9._-]*$" (name %))))
 (s/def ::config-key (s/with-gen config-key? #(gen/such-that config-key? gen-config-key)))
 
 (s/def ::services (s/map-of ::config-key ::service))
