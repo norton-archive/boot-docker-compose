@@ -204,11 +204,11 @@
 (s/def ::driver_opts-key (s/with-gen driver_opts-key? #(gen/such-that driver_opts-key? gen-driver_opts-key)))
 
 (s/def ::driver_opts-key (s/and keyword? #(re-matches #"^.+$" (name %))))
-(s/def ::driver_opts-val (s/alt :string string? :number number?))
+(s/def ::driver_opts-val (s/or :string string? :number number?))
 (s/def ::driver_opts (s/map-of ::driver_opts-key ::driver_opts-val))
 
 (s/def ::name ::not-empty-string?)
-(s/def ::external (s/alt :boolean boolean? :object (s/keys :req [::name])))
+(s/def ::external (s/or :boolean boolean? :object (s/keys :req [::name])))
 
 (s/def ::network (s/keys :opt [::ipam ::driver ::driver_opts ::external]))
 
